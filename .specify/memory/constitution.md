@@ -1,55 +1,88 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+SYNC IMPACT REPORT
+Version change: none → 1.0.0 (INITIAL CONSTITUTION)
+List of modified principles: N/A (initial creation)
+Added sections:
+- Security First (JWT)
+- Multi-User Data Isolation
+- Spec-Driven Development
+- Monorepo Architecture
+- Type Safety
+- Coding Standards (Frontend & Backend)
+- Claude Code Behavior Rules
+Removed sections: N/A (initial creation)
+Templates requiring updates:
+  ✅ plan-template.md (constitution check section already in place)
+  ✅ spec-template.md (already structured for spec-driven development)
+  ✅ tasks-template.md (already organized by user stories)
+  ⚠ CLAUDE.md (may need updates to align with new constitution principles)
+Follow-up TODOs: None - all placeholders filled
+-->
+
+# Todo Full-Stack Web Application (Phase 2) Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### Security First (JWT)
+Every API endpoint and protected route MUST enforce JWT authentication. JWTs are issued via Better Auth and MUST be validated on every backend request using the JWT verification skill. Expiration checking and signature verification are non-negotiable. No public APIs may expose user data without authentication.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### Multi-User Data Isolation
+All user data MUST be isolated by `user_id`. Database queries MUST include a WHERE clause filtering by `user_id` for all user-owned resources (todos, preferences, settings). Never return data for one user to another. Cross-user data access is strictly prohibited without explicit authorization.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### Spec-Driven Development
+All features MUST follow the spec-driven development workflow: spec → plan → tasks → implementation. No code may be written without a corresponding spec.md, plan.md, and tasks.md file. Changes to requirements must be reflected in the spec before implementation. This principle ensures traceability from user intent to code.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### Monorepo Architecture
+The project uses a monorepo structure with `frontend/` (Next.js 16+) and `backend/` (FastAPI) directories. Frontend and backend share type definitions and contracts via `backend/src/models/` and TypeScript interfaces. The monorepo enables coordinated releases and shared development standards across both services.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### Type Safety
+All code MUST be strictly typed: Python uses type hints (SQLModel, Pydantic), TypeScript uses strict mode. No `any` types are allowed in production code. Database models are the single source of truth for type definitions. Type safety prevents runtime errors and improves maintainability.
 
-### [PRINCIPLE_6_NAME]
+## Coding Standards
 
+### Frontend (Next.js 16+, TypeScript, App Router)
+- Use Server Components by default; Client Components only when interactivity required
+- Follow the App Router conventions: `app/` directory, `layout.tsx`, `page.tsx`
+- API calls go through frontend services (`frontend/src/services/`) which type-check backend responses
+- No inline styles; use Tailwind CSS or a component library
+- Error boundaries for route segments; loading states for async operations
 
-[PRINCIPLE__DESCRIPTION]
+### Backend (FastAPI, SQLModel, Python)
+- All endpoints MUST use SQLModel models for request/response validation
+- Async functions for all I/O operations (database, external APIs)
+- Dependencies injected via FastAPI's dependency system
+- Standardized error responses: HTTP status codes + structured error messages
+- All database queries in repository pattern or service layer, not in route handlers
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Claude Code Behavior Rules
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+Claude Code MUST operate as an architect agent in a multi-agent system:
+- Follow agent responsibilities strictly (architect delegates to backend, frontend, auth, database agents)
+- Delegate tasks to sub-agents (api-designer, jwt-verifier, ui-layout, orm-modeler) when needed
+- Use skills (jwt-auth, rest-api, sqlmodel, nextjs-app-router, better-auth) instead of re-inventing logic
+- Never implement features without first finalizing architecture and skeleton
+- Always validate against the constitution before suggesting changes
+- Create PHRs for every significant interaction
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
-
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+What is NOT allowed:
+- Skipping the spec → plan → tasks workflow
+- Bypassing JWT authentication in any endpoint
+- Writing code that violates multi-user data isolation
+- Adding `any` types or ignoring type errors
+- Hardcoding secrets or credentials (use environment variables)
+- Modifying templates without updating the constitution if principles change
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+Amendments to this constitution require:
+1. Document the proposed change with rationale
+2. Update version using semantic versioning:
+   - MAJOR: Principle removal or redefinition that breaks backward compatibility
+   - MINOR: New principle added or materially expanded guidance
+   - PATCH: Clarifications, wording, typo fixes, non-semantic refinements
+3. Propagate changes to dependent templates and documentation
+4. Record ratification date and update Last Amended date
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+All code reviews and planning sessions must verify compliance with these principles. Any principle violation must be explicitly justified in the plan's Complexity Tracking table. Use CLAUDE.md for runtime development guidance; the constitution is the source of truth for project governance.
+
+**Version**: 1.0.0 | **Ratified**: 2025-12-31 | **Last Amended**: 2025-12-31
