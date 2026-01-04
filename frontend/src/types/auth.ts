@@ -8,6 +8,7 @@ export interface User {
   id: string;
   username: string;
   created_at: string;  // ISO 8601 datetime string
+  email?: string;      // Optional email field from backend
 }
 
 /**
